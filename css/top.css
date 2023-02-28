@@ -1,0 +1,79 @@
+#titleArea{
+    width: 100%;
+    text-align: center;
+    padding: 30px 0;
+    background-image: url("../img/titleHead.png");
+    background-size: 100%;
+    background-color: black;
+    background-repeat: no-repeat;
+}
+#titleArea h1{
+    font-size: 40px;
+    color: white;
+    margin: 0;
+}
+#stageArea{
+    display: flex;
+}
+#buttonArea{
+    margin: 10px;
+    width: 250px;
+    flex-shrink: 0;
+}
+.buttonActive{
+    background-color: rgb(255, 219, 165);
+    border-radius: 5px;
+}
+.oneButtonArea{
+    padding: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+.oneButtonArea p{
+    font-size: 20px;
+}
+#stageInfoArea{
+    padding: 20px;
+}
+#stageTitle{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/*説明部分*/
+#stageDesc{
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 17px;
+}
+#stageInfoArea button{
+    width: 150px;
+    border-radius: 5px;
+    outline: none;
+    background-color: rgb(255, 243, 79);
+    border: none;
+    padding: 10px 0px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+    border: solid 2px white;
+}
+#stageInfoArea button:active{
+    outline: solid 4px rgb(255, 243, 79);
+}
+.oneButtonArea{
+    margin-right: 10px;
+}
+#buttonArea{
+    border-right: solid 1px gray;
+}
+#flexButton{
+    display: flex;
+    align-items:end;
+}
+.copyRight{
+    margin-left: auto;
+    width: fit-content;
+}

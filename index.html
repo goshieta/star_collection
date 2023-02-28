@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Collection</title>
+    <link rel="shortcut icon" href="./favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/top.css">
+    <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
+    <script src="./js/colorPlugin.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+<body>
+    <div id="VueApp">
+        <div id="top" v-show="viewMode==0">
+            <div id="titleArea">
+                <h1>Star Collection</h1>
+            </div>
+            <div id="stageArea">
+                <div id="buttonArea">
+                    <div class="oneButtonArea" v-for="(oneStageInfo,index) in stage" :key="oneStageInfo" @click="changeActive(index)" :class="{buttonActive:nowSelectStage==index}">
+                        <p>{{oneStageInfo.stageName}}</p>
+                    </div>
+                </div>
+                <div id="stageInfoArea">
+                    <label><input type="range" max="60" min="20" step="1" v-model="fps">FPSを変更 {{fps}}FPS</label>
+                    <p id="stageTitle">{{stage[nowSelectStage].stageName}}</p>
+                    <p id="stageLev">レベル : {{stage[nowSelectStage].stageDiff}}</p>
+                    <p>星 : {{Object.keys(stage[nowSelectStage].star).length}}個</p>
+                    <p id="stageDesc">{{stage[nowSelectStage].desc}}</p>
+                    <div id="flexButton">
+                        <button @click="start(nowSelectStage)">スタート</button>
+                        <p class="copyRight">© 2023 Inforde Inc.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="game" v-show="viewMode==1">
+            <div id="dialog">
+                <div id="dialogBody" v-show="dialogMes!='-1'">
+                    <p>{{dialogMes}}</p>
+                </div>
+            </div>
+            <canvas id="app"></canvas>
+        </div>
+        <div id="endGame" v-show="viewMode==2">
+            <div id="egScore"></div>
+            <div id="egButton"></div>
+        </div>
+    </div>
+    <script src="./js/eventChara.js"></script>
+    <script src="./js/mainChara.js"></script>
+    <script src="./js/main.js"></script>
+    <script src="./js/backStage.js"></script>
+</body>
+</html>
