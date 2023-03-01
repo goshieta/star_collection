@@ -1,24 +1,26 @@
 //メインキャラクターを動かす！！！
 class oneMainChara{
-    constructor(stage,backStage,chankBlock,parameter,loadData){
+    constructor(stage,bgStage,loadData){
         this.stage=stage
-        this.backStage=backStage
-        this.parameter=parameter
+        this.backStage=bgStage.backStage
+        this.parameter=bgStage.para
         this.position=[0,0]//テスト用にスポーン地点の座標を変更。実際の座標は[0,0]
         this.speedX=0
         this.haveStar=0
-        this.startStarLength=chankBlock.number.star
+        this.startStarLength=bgStage.chankBlock.number.star
         this.pressKey={
             a:false,
             d:false,
         }
-        this.chankBlock=chankBlock
+        this.chankBlock=bgStage.chankBlock
         //y軸の動きに関するパラメータ
         this.startTime=null
         this.firstSpeed=0
         this.firstY=0
         //前回算出された高さ。これをもとに上っているか上っていないかを判断し、上っている途中は当たり判定を無効化する。
         this.beforeH=-1
+
+        this.bgStage=bgStage
 
         //メインキャラクターを定義
         let mainChara=new createjs.Bitmap(loadData.target._loadedResults.mainChara)
@@ -32,10 +34,9 @@ class oneMainChara{
         this.mainChara=mainChara
 
         //各種関数呼び出し
-        window.addEventListener("resize",()=>{
-            mainChara.x=window.innerWidth/2
-        })
-        setInterval(this.movechara.bind(this),10)
+        this.resizeEve=()=>mainChara.x=window.innerWidth/2
+        window.addEventListener("resize",this.resizeEve)
+        this.mainTimer=setInterval(this.movechara.bind(this),10)
     }
     keyDownEve(e){
         if(e.key=="d"){
@@ -171,5 +172,11 @@ class oneMainChara{
     
         this.backStage.x=window.innerWidth/2-200+Math.round(-this.position[0])
         this.backStage.y=Math.round(this.position[1])
+
+        if(this.position[1]<-2500)this.bgStage.endGameStatus=true
+        if(this.bgStage.endGameStatus){
+            window.removeEventListener('resize',this.resizeEve)
+            clearInterval(this.mainTimer)
+        }
     }
 }

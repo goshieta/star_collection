@@ -8,6 +8,7 @@
     <link rel="shortcut icon" href="./favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/top.css">
+    <link rel="stylesheet" href="./css/over.css">
     <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
     <script src="./js/colorPlugin.js"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -16,7 +17,7 @@
     <div id="VueApp">
         <div id="top" v-show="viewMode==0">
             <div id="titleArea">
-                <h1>Star Collection</h1>
+                <h1>Star Collection</h1><p style="color: white;margin: none;font-size: 17px;">Beta 1.1</p>
             </div>
             <div id="stageArea">
                 <div id="buttonArea">
@@ -46,8 +47,24 @@
             <canvas id="app"></canvas>
         </div>
         <div id="endGame" v-show="viewMode==2">
-            <div id="egScore"></div>
-            <div id="egButton"></div>
+            <div id="egFlex">
+                <div id="egScore">
+                    <div id="mainScore">
+                        <p>スコア : {{scoreInfo.mainScore}}</p>
+                    </div>
+                    <div id="scoreDetail">
+                        <p id="sdTitle">スコア詳細</p>
+                        <div class="oneScore" v-for="si in scoreInfo.detailScore">
+                            <p>{{si.name}}</p>
+                            <p>{{si.value}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="egButton">
+                    <button @click="clear();start(nowSelectStage)">リトライ</button>
+                    <button @click="clear();viewMode=0">トップ</button>
+                </div>
+            </div>
         </div>
     </div>
     <script src="./js/eventChara.js"></script>

@@ -3,6 +3,7 @@ class stageGeometry{
         this.stage=stage
         this.stageNum=stageNum
         this.loadData=loadData
+        this.endGame=false
 
         //バックのステージを実装
         this.backStage=new createjs.Container()
@@ -22,6 +23,7 @@ class stageGeometry{
         this.para={
             star:{
                 txtObj:new createjs.Text(`0 / ${Object.keys(stageGeometryArray[stageNum].star).length}`,"24px Arial","black"),
+                paraShowName:"星",
                 titleImg:()=>{
                     let starIcon=new createjs.Shape()
                     starIcon.graphics.beginFill("#ffc800")
@@ -32,6 +34,7 @@ class stageGeometry{
             },
             seconds:{
                 txtObj:new createjs.Text("0","24px Arial","black"),
+                paraShowName:"かかった時間(秒)",
                 titleImg:(loadData)=>{
                     const timerIcon=new createjs.Bitmap(loadData.target._loadedResults.timer)
                     timerIcon.scaleX=0.625
@@ -43,6 +46,7 @@ class stageGeometry{
             },
             position:{
                 txtObj:new createjs.Text("(0,0)","24px Arial","black"),
+                paraShowName:"座標",
                 titleImg:(loadData)=>{
                     const exeicon=new createjs.Bitmap(loadData.target._loadedResults.science)
                     exeicon.scaleX=0.625
@@ -54,6 +58,7 @@ class stageGeometry{
             },
             hit:{
                 txtObj:new createjs.Text("true","24px Arial","black"),
+                paraShowName:"地面に対する当たり判定",
                 titleImg:(loadData)=>{
                     const exeicon=new createjs.Bitmap(loadData.target._loadedResults.science)
                     exeicon.scaleX=0.625
@@ -91,11 +96,23 @@ class stageGeometry{
         //ここまでくると生成終わってる
         console.log(this.chankBlock)
 
-        //ステージの座標
+        //ステージの座標&クリアしているかどうか確かめる
         const positionReload=()=>{
-            requestAnimationFrame(positionReload)
+            if(!this.endGameStatus)requestAnimationFrame(positionReload)
             this.para.position.txtObj.text=`(${-(this.backStage.x-window.innerWidth/2+200)},${this.backStage.y})`
             this.fixParaWidth()
+
+            //クリアしているか確かめる
+            let clearCondition=stageGeometryArray[stageNum].clearCondition
+            let trueNum=0
+            clearCondition.forEach(oneCondition=>{
+                let parameterA=String(this.para[oneCondition[0]].txtObj.text).split("/")[0].replace(" ","")
+                let parameterB=oneCondition[1]
+                if(parameterA==parameterB){
+                    trueNum++
+                }
+            })
+            if(trueNum==clearCondition.length){this.endGame=true}
         }
         positionReload()
     }
@@ -218,6 +235,7 @@ class stageGeometry{
     drawParameter(){
         let nowX=0
         let Allparameter=new createjs.Container()
+        console.log(this.para)
         this.paraDictionary.forEach((paraName,index)=>{
             const oneParaInfo=this.para[paraName]
             let paraComp=new createjs.Container()
@@ -258,5 +276,11 @@ class stageGeometry{
             backGra.drawRoundRect(0,0,txtWidth+60,40,10,10)
             nowX+=(txtWidth+80)
         })
+    }
+    get endGameStatus(){
+        return this.endGame
+    }
+    set endGameStatus(value){
+        this.endGame=value
     }
 }

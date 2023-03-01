@@ -12,7 +12,11 @@ const gameApp=Vue.createApp({
             nowSelectStage:0,
             viewMode:0,
             dialogMes:"読み込み中",
-            fps:60
+            fps:60,
+            scoreInfo:{
+                mainScore:0,
+                detailScore:[]
+            }
         }
     },
     methods:{
@@ -48,18 +52,28 @@ const gameApp=Vue.createApp({
             queue.loadManifest(manifest,true)
 
             const eventObj=(bgStage,mainCharaObj)=>{
-                window.addEventListener('keydown',mainCharaObj.keyDownEve.bind(mainCharaObj))
-                window.addEventListener("keyup",mainCharaObj.keyUpEve.bind(mainCharaObj))
+                const keydownBind=(e)=>mainCharaObj.keyDownEve(e)
+                const keyupBind=(e)=>mainCharaObj.keyUpEve(e)
+                window.addEventListener('keydown',keydownBind)
+                window.addEventListener("keyup",keyupBind)
                 let time=0
-                setInterval(()=>{
+                let timerInter=setInterval(()=>{
                     time++
                     bgStage.para["seconds"].txtObj.text=time
+                    if(bgStage.endGameStatus){
+                        clearInterval(timerInter)
+                        window.removeEventListener("keydown",keydownBind)
+                        window.removeEventListener('keyup',keyupBind)
+                    }
                 },1000)
             }
+
             //読み込み終わったら
             queue.addEventListener("complete",(e)=>{
                 let bgStage=new stageGeometry(stage,stageNum,e)
-                let mainCharaObj=new oneMainChara(stage,bgStage.backStage,bgStage.chankBlock,bgStage.para,e)
+                let mainCharaObj=new oneMainChara(stage,bgStage,e)
+
+                //3,2,1,スタート!
                 let leftOver=3
                 this.dialogMes=leftOver
                 const countObj=()=>{
@@ -74,10 +88,35 @@ const gameApp=Vue.createApp({
                     }
                 }
                 const countTimer=setInterval(countObj,1000)
+
+                //ゲームオーバーの監視
+                const watchOver=()=>{
+                    if(bgStage.endGameStatus){
+                        let mainScoreJson={}
+                        bgStage.paraDictionary.forEach(paraName=>{
+                            let paraInfo=String(bgStage.para[paraName].txtObj.text).split("/")[0]
+                            this.scoreInfo.detailScore.push({name:bgStage.para[paraName].paraShowName,value:paraInfo})
+                            mainScoreJson[paraName]=paraInfo
+                        })
+                        this.scoreInfo.mainScore=stageGeometryArray[stageNum].calculateScore(mainScoreJson)
+                        this.viewMode=2
+                        createjs.Ticker.removeEventListener("tick",stage)
+                    }
+                    else requestAnimationFrame(watchOver)
+                }
+                watchOver()
             })
         },
         changeActive(stageNum){
             this.nowSelectStage=stageNum
+        },
+        clear(){
+            //メソッド内を初期化。リトライやトップ画面に戻る時に使う
+            this.dialogMes="読み込み中"
+            this.scoreInfo={
+                mainScore:0,
+                detailScore:[]
+            }
         }
     }
 })

@@ -1,4 +1,4 @@
-const stageGeometryArray=[
+let stageGeometryArray=[
     {
         stageName:"Basic",
         stageDiff:1,
@@ -7,6 +7,8 @@ const stageGeometryArray=[
         ground:[[50,200,500],[900,500,80],[1500,350,200],[1700,500,200],[1900,700,200],[1000,950,800],[800,1200,250],[800,1500,250],[800,1800,250],[800,2100,250],[800,2400,250],[800,2700,250],[800,3000,250],[150,3200,100],[100,3500,200],[50,3800,300],/*ここから三つに分岐するところ*//*1*/[-600,4000,100],[-800,4200,100],[-1000,4400,100],[-1200,4600,100],[-2300,4800,700],/*2*/[150,4000,100],[150,4200,100],[150,4400,100],[150,4600,100],[150,4800,100],[0,5100,400],/*3*/[900,4000,100],[1100,4200,100],[1300,4400,100],[1500,4600,100],[1900,4800,700],/*二つに分岐するところの二つ目*/[1750,1200,250],[2300,1400,200],[2800,1300,200],[3300,1400,200],[3800,1300,200],[4300,1400,200],[4000,1700,80],[3700,1900,80],[3400,2100,80],[3100,2300,80],[2800,2500,80],[2000,2500,600],/*地下*/[4800,-1000,600],[4400,-1000,200],[4000,-1000,200],[3600,-1000,200],[3200,-1000,200],[2800,-1000,200],[2400,-1000,200],[2000,-1000,200],[1600,-1000,200],[2500,-1400,400],[2800,-1500,200],[2400,-1500,200],[2500,-1600,400],[2800,-1700,200],[2400,-1700,200],[2500,-1800,400]],
         customElements:[],
         loadMani:[],
+        calculateScore:(mainScoreJson)=>Math.floor(mainScoreJson.star*100+(1200/mainScoreJson.seconds*(mainScoreJson.star/61))),
+        clearCondition:[["star","61"]]
     },
     {
         stageName:"呉市",
@@ -72,6 +74,7 @@ const stageGeometryArray=[
             name:"oyster",
             type:"event",
             start(){
+                this.position=[]
                 for(let i=0;i<10;i++){
                     this.position.push([Math.floor(Math.random()*1000+9000),-1200-(Math.floor(Math.random()*4)*300)])
                 }
@@ -80,6 +83,8 @@ const stageGeometryArray=[
                 const oyster=new createjs.Bitmap(loadData.target._loadedResults["牡蠣"])
                 oyster.regY=50
                 oyster.regX=30
+                oyster.scaleX=0.7
+                oyster.scaleY=0.7
                 return oyster
             },
             customEvent(parentThis){
@@ -91,6 +96,7 @@ const stageGeometryArray=[
         custumVariable:[{
             name:"oyster",
             txtObj:new createjs.Text("0 / 10","24px Arial","black"),
+            paraShowName:"牡蠣",
             titleImg:(loadData)=>{
                 const oysterIcon=new createjs.Bitmap(loadData.target._loadedResults["牡蠣"])
                 oysterIcon.scaleX=0.5
@@ -105,7 +111,9 @@ const stageGeometryArray=[
             {id:"牡蠣",src:"./img/牡蠣.png"},
             {id:"両城",src:"./img/両城.jpg"},
             {id:"呉湾",src:"./img/呉湾.jpg"}
-        ]
+        ],
+        calculateScore:(mainScoreJson)=>Math.floor(mainScoreJson.star*100+(1200/mainScoreJson.seconds*(mainScoreJson.star/23))+(mainScoreJson.oyster*20)),
+        clearCondition:[["star","23"],["oyster","10"]],
     },
     {
         stageName:"鬼が島",
@@ -114,6 +122,8 @@ const stageGeometryArray=[
         star:[],
         ground:[],
         customElements:[],
-        loadMani:[]
+        loadMani:[],
+        calculateScore:(mainScoreJson)=>Math.floor(mainScoreJson.star*100+(1200/mainScoreJson.seconds*mainScoreJson.star)),
+        clearCondition:[]
     }
 ]
