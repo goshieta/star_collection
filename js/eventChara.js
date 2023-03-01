@@ -75,6 +75,7 @@ let stageGeometryArray=[
             type:"event",
             start(){
                 this.position=[]
+                stageGeometryArray[1].custumVariable[0].txtObj.text="0 / 10"
                 for(let i=0;i<10;i++){
                     this.position.push([Math.floor(Math.random()*1000+9000),-1200-(Math.floor(Math.random()*4)*300)])
                 }

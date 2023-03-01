@@ -235,7 +235,6 @@ class stageGeometry{
     drawParameter(){
         let nowX=0
         let Allparameter=new createjs.Container()
-        console.log(this.para)
         this.paraDictionary.forEach((paraName,index)=>{
             const oneParaInfo=this.para[paraName]
             let paraComp=new createjs.Container()
