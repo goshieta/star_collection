@@ -44,16 +44,25 @@ const gameApp = Vue.createApp({
       else createjs.Ticker.timingMode = this.fps;
       createjs.Ticker.addEventListener("tick", stage);
 
+      createjs.Sound.registerPlugins([
+        createjs.WebAudioPlugin,
+        createjs.HTMLAudioPlugin,
+      ]);
+
       //ファイルの読み込み処理
       const defaultLoadMani = [
         { id: "timer", src: "./img/timer.png" },
         { id: "science", src: "./img/experiment.png" },
         { id: "mainChara", src: "./img/mainchara.png" },
+        { id: "collectedStar", src: "./audio/collectedStar.mp3" },
+        { id: "seijouki", src: "./audio/星条旗よ永遠なれ.mp3" },
+        { id: "gameover", src: "./audio/gameover.mp3" },
       ];
       const manifest = defaultLoadMani.concat(
         stageGeometryArray[stageNum].loadMani,
       );
       let queue = new createjs.LoadQueue(true);
+      queue.installPlugin(createjs.Sound);
       queue.on("progress", (e) => {
         this.dialogMes = `${Math.floor(e.progress * 100)}% 読み込み中`;
       });

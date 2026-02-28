@@ -93,6 +93,9 @@ class stageGeometry {
       });
     }
 
+    //背景音楽の再生
+    this.backSound = createjs.Sound.play("seijouki", { loop: -1 });
+
     //地面
     let ground = new createjs.Shape();
     ground.graphics.beginFill("green");
@@ -130,6 +133,7 @@ class stageGeometry {
       });
       if (trueNum == clearCondition.length) {
         this.endGame = true;
+        this.doEndGame();
       }
     };
     positionReload();
@@ -303,6 +307,10 @@ class stageGeometry {
       backGra.drawRoundRect(0, 0, txtWidth + 60, 40, 10, 10);
       nowX += txtWidth + 80;
     });
+  }
+  doEndGame() {
+    this.backSound.stop();
+    this.backSound.destroy();
   }
   get endGameStatus() {
     return this.endGame;
