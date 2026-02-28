@@ -121,6 +121,6 @@ let stageGeometryArray = [
         mainScoreJson.star * 100 +
           (1200 / mainScoreJson.seconds) * (mainScoreJson.star / 61),
       ),
-    clearCondition: [["star", "61"]],
+    clearCondition: [["star", "50"]],
   },
 ];

@@ -18,6 +18,7 @@ const gameApp = Vue.createApp({
         mainScore: 0,
         detailScore: [],
       },
+      bgStage: null,
     };
   },
   methods: {
@@ -57,6 +58,7 @@ const gameApp = Vue.createApp({
         { id: "collectedStar", src: "./audio/collectedStar.mp3" },
         { id: "seijouki", src: "./audio/星条旗よ永遠なれ.mp3" },
         { id: "gameover", src: "./audio/gameover.mp3" },
+        { id: "clear", src: "./audio/the_star_spangled_banner.mp3" },
       ];
       const manifest = defaultLoadMani.concat(
         stageGeometryArray[stageNum].loadMani,
@@ -87,8 +89,8 @@ const gameApp = Vue.createApp({
 
       //読み込み終わったら
       queue.addEventListener("complete", (e) => {
-        let bgStage = new stageGeometry(stage, stageNum, e, this.debugMode);
-        let mainCharaObj = new oneMainChara(stage, bgStage, e);
+        this.bgStage = new stageGeometry(stage, stageNum, e, this.debugMode);
+        let mainCharaObj = new oneMainChara(stage, this.bgStage, e);
 
         //3,2,1,スタート!
         let leftOver = 3;
@@ -99,7 +101,7 @@ const gameApp = Vue.createApp({
           if (leftOver == 0) {
             this.dialogMes = "スタート!";
           } else if (leftOver == -1) {
-            eventObj(bgStage, mainCharaObj);
+            eventObj(this.bgStage, mainCharaObj);
             clearInterval(countTimer);
             return;
           }
@@ -108,14 +110,14 @@ const gameApp = Vue.createApp({
 
         //ゲームオーバーの監視
         const watchOver = () => {
-          if (bgStage.endGameStatus) {
+          if (this.bgStage.endGameStatus) {
             let mainScoreJson = {};
-            bgStage.paraDictionary.forEach((paraName) => {
-              let paraInfo = String(bgStage.para[paraName].txtObj.text).split(
-                "/",
-              )[0];
+            this.bgStage.paraDictionary.forEach((paraName) => {
+              let paraInfo = String(
+                this.bgStage.para[paraName].txtObj.text,
+              ).split("/")[0];
               this.scoreInfo.detailScore.push({
-                name: bgStage.para[paraName].paraShowName,
+                name: this.bgStage.para[paraName].paraShowName,
                 value: paraInfo,
               });
               mainScoreJson[paraName] = paraInfo;
@@ -134,6 +136,12 @@ const gameApp = Vue.createApp({
     },
     clear() {
       //メソッド内を初期化。リトライやトップ画面に戻る時に使う
+      try {
+        this.bgStage.clearMusic?.stop();
+        this.bgStage.backSound?.stop();
+      } catch {}
+
+      document.body.style.backgroundImage = "";
       this.dialogMes = "読み込み中";
       this.scoreInfo = {
         mainScore: 0,

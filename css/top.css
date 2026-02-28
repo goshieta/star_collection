@@ -1,3 +1,10 @@
+body {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-height: 100svh;
+}
+
 #titleArea {
   width: 100%;
   text-align: center;

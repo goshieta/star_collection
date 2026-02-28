@@ -94,7 +94,9 @@ class stageGeometry {
     }
 
     //背景音楽の再生
-    this.backSound = createjs.Sound.play("seijouki", { loop: -1 });
+    try {
+      this.backSound = createjs.Sound.play("seijouki", { loop: -1 });
+    } catch {}
 
     //地面
     let ground = new createjs.Shape();
@@ -133,6 +135,10 @@ class stageGeometry {
       });
       if (trueNum == clearCondition.length) {
         this.endGame = true;
+        document.body.style.backgroundImage = "url('./img/USA.png')";
+        if (!this.clearMusic) {
+          this.clearMusic = createjs.Sound.play("clear", { loop: -1 });
+        }
         this.doEndGame();
       }
     };
