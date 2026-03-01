@@ -8,7 +8,7 @@ class stageGeometry {
 
     //バックのステージを実装
     this.backStage = new createjs.Container();
-    this.backStage.x = window.innerWidth / 2 - 200;
+    this.backStage.x = 1280 / 2 - 200;
     this.backStage.y = 0;
     stage.addChild(this.backStage);
 
@@ -118,7 +118,7 @@ class stageGeometry {
     //ステージの座標&クリアしているかどうか確かめる
     const positionReload = () => {
       if (!this.endGameStatus) requestAnimationFrame(positionReload);
-      this.para.position.txtObj.text = `(${-(this.backStage.x - window.innerWidth / 2 + 200)},${this.backStage.y})`;
+      this.para.position.txtObj.text = `(${-(this.backStage.x - 1280 / 2 + 200)},${this.backStage.y})`;
       this.fixParaWidth();
 
       //クリアしているか確かめる

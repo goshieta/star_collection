@@ -1,9 +1,8 @@
 //canvasのサイズを変更
 const changeCanvasSize = () => {
-  document.getElementById("app").width = window.innerWidth;
-  document.getElementById("app").height = window.innerHeight;
+  document.getElementById("app").width = 1280;
+  document.getElementById("app").height = 800;
 };
-window.addEventListener("resize", changeCanvasSize);
 
 const gameApp = Vue.createApp({
   data() {
@@ -19,24 +18,35 @@ const gameApp = Vue.createApp({
         detailScore: [],
       },
       bgStage: null,
+      mainChara: null,
+      isGameActive: false,
     };
   },
   methods: {
+    moveStart(dir) {
+      if (this.mainChara && this.isGameActive) {
+        if (dir === "left") this.mainChara.pressKey.a = true;
+        if (dir === "right") this.mainChara.pressKey.d = true;
+      }
+    },
+    moveEnd(dir) {
+      if (this.mainChara && this.isGameActive) {
+        if (dir === "left") this.mainChara.pressKey.a = false;
+        if (dir === "right") this.mainChara.pressKey.d = false;
+      }
+    },
+    jump() {
+      if (this.mainChara && this.isGameActive) {
+        this.mainChara.jump();
+      }
+    },
     start(stageNum) {
       //ゲームスタート
       changeCanvasSize();
       let stage = new createjs.Stage("app");
       let backGround = new createjs.Shape();
       backGround.graphics.beginFill("#0066ba");
-      backGround.graphics.drawRect(0, 0, window.innerWidth, window.innerHeight);
-      window.addEventListener("resize", () => {
-        backGround.graphics.drawRect(
-          0,
-          0,
-          window.innerWidth,
-          window.innerHeight,
-        );
-      });
+      backGround.graphics.drawRect(0, 0, 1280, 800);
       stage.addChild(backGround);
 
       this.viewMode = 1;
@@ -90,7 +100,7 @@ const gameApp = Vue.createApp({
       //読み込み終わったら
       queue.addEventListener("complete", (e) => {
         this.bgStage = new stageGeometry(stage, stageNum, e, this.debugMode);
-        let mainCharaObj = new oneMainChara(stage, this.bgStage, e);
+        this.mainChara = new oneMainChara(stage, this.bgStage, e);
 
         //3,2,1,スタート!
         let leftOver = 3;
@@ -101,7 +111,8 @@ const gameApp = Vue.createApp({
           if (leftOver == 0) {
             this.dialogMes = "スタート!";
           } else if (leftOver == -1) {
-            eventObj(this.bgStage, mainCharaObj);
+            this.isGameActive = true;
+            eventObj(this.bgStage, this.mainChara);
             clearInterval(countTimer);
             return;
           }
@@ -111,6 +122,7 @@ const gameApp = Vue.createApp({
         //ゲームオーバーの監視
         const watchOver = () => {
           if (this.bgStage.endGameStatus) {
+            this.isGameActive = false;
             let mainScoreJson = {};
             this.bgStage.paraDictionary.forEach((paraName) => {
               let paraInfo = String(
@@ -147,6 +159,8 @@ const gameApp = Vue.createApp({
         mainScore: 0,
         detailScore: [],
       };
+      this.mainChara = null;
+      this.isGameActive = false;
     },
   },
 });

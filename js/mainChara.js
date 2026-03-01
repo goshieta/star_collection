@@ -11,6 +11,7 @@ class oneMainChara {
     this.pressKey = {
       a: false,
       d: false,
+      w: false,
     };
     this.chankBlock = bgStage.chankBlock;
     //y軸の動きに関するパラメータ
@@ -26,7 +27,7 @@ class oneMainChara {
     let mainChara = new createjs.Bitmap(
       loadData.target._loadedResults.mainChara,
     );
-    mainChara.x = window.innerWidth / 2;
+    mainChara.x = 1280 / 2;
     mainChara.y = 500;
     mainChara.scaleX = 0.5;
     mainChara.scaleY = 0.5;
@@ -36,10 +37,18 @@ class oneMainChara {
     this.mainChara = mainChara;
 
     //各種関数呼び出し
-    this.resizeEve = () => (mainChara.x = window.innerWidth / 2);
-    window.addEventListener("resize", this.resizeEve);
     this.mainTimer = setInterval(this.movechara.bind(this), 10);
   }
+
+  jump() {
+    if (this.startTime == null) {
+      //上方に打ち上げる
+      this.startTime = 0;
+      this.firstSpeed = 75; //メートル毎秒
+      this.firstY = this.position[1];
+    }
+  }
+
   keyDownEve(e) {
     if (e.key == "d") {
       this.pressKey.d = true;
@@ -47,11 +56,8 @@ class oneMainChara {
     if (e.key == "a") {
       this.pressKey.a = true;
     }
-    if (e.key == "w" && this.startTime == null) {
-      //上方に打ち上げる
-      this.startTime = 0;
-      this.firstSpeed = 75; //メートル毎秒
-      this.firstY = this.position[1];
+    if (e.key == "w") {
+      this.jump();
     }
   }
   keyUpEve(e) {
@@ -138,11 +144,11 @@ class oneMainChara {
     const BooltouchGround = () => {
       let returnBoolean = false;
       returnArray(this.position[0] + 31)["ground"]?.forEach((oneGround) => {
-        let point = oneGround.globalToLocal(window.innerWidth / 2 + 31, 500);
+        let point = oneGround.globalToLocal(1280 / 2 + 31, 500);
         if (oneGround.hitTest(point.x, point.y)) returnBoolean = true;
       });
       returnArray(this.position[0] - 31)["ground"]?.forEach((oneGround) => {
-        let point = oneGround.globalToLocal(window.innerWidth / 2 - 31, 500);
+        let point = oneGround.globalToLocal(1280 / 2 - 31, 500);
         if (oneGround.hitTest(point.x, point.y)) returnBoolean = true;
       });
       this.parameter["hit"].txtObj.text = String(returnBoolean);
@@ -206,8 +212,7 @@ class oneMainChara {
       }
     }
 
-    this.backStage.x =
-      window.innerWidth / 2 - 200 + Math.round(-this.position[0]);
+    this.backStage.x = 1280 / 2 - 200 + Math.round(-this.position[0]);
     this.backStage.y = Math.round(this.position[1]);
 
     if (this.position[1] < -2500) {
@@ -216,7 +221,6 @@ class oneMainChara {
       this.bgStage.doEndGame();
     }
     if (this.bgStage.endGameStatus) {
-      window.removeEventListener("resize", this.resizeEve);
       clearInterval(this.mainTimer);
     }
   }

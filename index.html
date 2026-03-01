@@ -52,6 +52,27 @@
           </div>
         </div>
         <canvas id="app"></canvas>
+        <div id="moveKey">
+          <button
+            @mousedown="moveStart('left')"
+            @mouseup="moveEnd('left')"
+            @touchstart="moveStart('left')"
+            @touchend="moveEnd('left')"
+            @mouseleave="moveEnd('left')"
+          >
+            ←
+          </button>
+          <button @mousedown="jump()" @touchstart="jump()">↑</button>
+          <button
+            @mousedown="moveStart('right')"
+            @mouseup="moveEnd('right')"
+            @touchstart="moveStart('right')"
+            @touchend="moveEnd('right')"
+            @mouseleave="moveEnd('right')"
+          >
+            →
+          </button>
+        </div>
       </div>
       <div id="endGame" v-show="viewMode==2">
         <div id="egFlex">
