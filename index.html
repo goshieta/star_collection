@@ -62,8 +62,6 @@
           >
             ←
           </button>
-          <div id="button_space"></div>
-          <button @mousedown="jump()" @touchstart="jump()">↑</button>
           <button
             @mousedown="moveStart('right')"
             @mouseup="moveEnd('right')"
@@ -73,6 +71,8 @@
           >
             →
           </button>
+          <div id="button_space"></div>
+          <button @mousedown="jump()" @touchstart="jump()">↑</button>
         </div>
       </div>
       <div id="endGame" v-show="viewMode==2">
